@@ -1,0 +1,56 @@
+server:
+  host:
+    mariadb: 127.0.0.1
+  port: 9080
+  error:
+    include-exception: false      # Response ? Exception ? ????
+    include-message: always       # Response ? Exception Message ? ???? (never | always | on_param)
+    include-stacktrace: on_param  # Response ? Stack Trace ? ???? (never | always | on_param) on_trace_params ? deprecated
+    whitelabel.enabled: true      # ?? ?? ? Spring ?? ?? ??? ?? ??
+
+spring:
+  application:
+    name: viewer
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mariadb://${server.host.mariadb}:3309/mo2ver
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: validate
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        data:
+          mongodb:
+            repository:
+              query: DEBUG
+        security: DEBUG
+        web:
+          filter: DEBUG
+
+crypto-setting:
+  password: mo2ver_aes256cbc_pbkdf2
+  salt: mo2ver_salt
+
+file-setting:
+  filepath: ../Mo2ver
