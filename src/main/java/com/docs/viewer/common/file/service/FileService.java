@@ -26,7 +26,8 @@ public class FileService {
         if (info.isPresent()) {
             File file = info.get();
             if('Y' != file.getCloudYn()){
-                String filePath = file.getFilePath().replace("..", fileProperties.getFilepath());
+                String rootPath = fileProperties.getFilepath();
+                String filePath = file.getFilePath().replace("..", rootPath);
                 return CryptoUtil.decryptFile(filePath);
             }
         }
