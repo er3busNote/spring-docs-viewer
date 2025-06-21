@@ -1,4 +1,4 @@
-package com.docs.viewer.global.common.properties;
+package com.docs.viewer.global.common.setting;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +8,10 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotEmpty;
 
 @Component
-@ConfigurationProperties(prefix = "crypto-setting")
+@ConfigurationProperties(prefix = "file-setting")
 @Getter @Setter
-public class CryptoProperties {
+public class FileSetting {
 
     @NotEmpty
-    private String password;
-
-    @NotEmpty
-    private String salt;
+    private String filepath;
 }

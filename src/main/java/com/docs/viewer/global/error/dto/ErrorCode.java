@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    FILETYPE_MAPPING_INVALID("CM_007", "지원되지 않는 파일타입입니다.", 400),
     INTERNAL_SERVER_ERROR("CM_100", "서버 에러.", 500);
 
     private final String code;

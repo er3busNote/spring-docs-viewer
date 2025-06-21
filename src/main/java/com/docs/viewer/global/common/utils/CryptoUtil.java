@@ -1,6 +1,6 @@
 package com.docs.viewer.global.common.utils;
 
-import com.docs.viewer.global.common.properties.CryptoProperties;
+import com.docs.viewer.global.common.setting.CryptoSetting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,15 +27,15 @@ public class CryptoUtil {
     private static final int KEY_SIZE = 256;
     private static final int IV_LENGTH = 16;
 
-    private final CryptoProperties cryptoProperties;
+    private final CryptoSetting cryptoSetting;
 
     private static String password;
     private static String salt;
 
     @PostConstruct
     public void init() {
-        password = cryptoProperties.getPassword();
-        salt = cryptoProperties.getSalt();
+        password = cryptoSetting.getPassword();
+        salt = cryptoSetting.getSalt();
     }
 
     // 참고 (Java AES Encryption and Decryption) : https://howtodoinjava.com/java/java-security/aes-256-encryption-decryption/

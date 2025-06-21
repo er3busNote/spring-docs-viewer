@@ -14,7 +14,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mariadb://${server.host.mariadb}:3309/mo2ver
+    url: jdbc:mariadb://${server.host.mariadb}:3309/mo2ver_dev
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     properties:
@@ -54,3 +54,12 @@ crypto-setting:
 
 file-setting:
   filepath: ../Mo2ver
+
+oracle:
+  cloud:
+    tenant-id: ocid1.tenancy.oc1..aaaaaaaa7osy4snfj6wc7zm7fab4njjnmifhlz5e5454gp4km7wlnqhtmtaa
+    user-id: ocid1.user.oc1..aaaaaaaaxrysvkqe7xqot26li232sotr4ir7fqbnpexnn2o256f2nk6fanna
+    fingerprint: cd:37:53:41:4d:cf:f2:5e:a1:da:83:86:0e:b7:14:95
+    namespace: cnocuvkcoanz
+    bucket-name: bucket-20231206-2356
+    private-key: ./key/mo2ver_bucket_api_key.pem
