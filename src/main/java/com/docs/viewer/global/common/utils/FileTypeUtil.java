@@ -30,15 +30,15 @@ public class FileTypeUtil {
         return PDF.includes(MediaType.valueOf(contentType));
     }
 
-    private static boolean isDocx(String contentType) {
+    public static boolean isDocx(String contentType) {
         return DOCX.includes(MediaType.valueOf(contentType));
     }
 
-    private static boolean isPptx(String contentType) {
+    public static boolean isPptx(String contentType) {
         return PPTX.includes(MediaType.valueOf(contentType));
     }
 
-    private static boolean isXlsx(String contentType) {
+    public static boolean isXlsx(String contentType) {
         return XLSX.includes(MediaType.valueOf(contentType));
     }
 }

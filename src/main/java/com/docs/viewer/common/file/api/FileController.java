@@ -37,11 +37,18 @@ public class FileController {
             String mimeType = fileResponse.getMimeType();
             if (FileTypeUtil.isAllowType(mimeType)) {
                 ByteArrayResource resource = fileResponse.getResource();
+                MediaType mediaType = MediaType.parseMediaType(mimeType);
                 if(FileTypeUtil.isPdf(mimeType)) {
-                    return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType))
+                    return ResponseEntity.ok().contentType(mediaType)
                             .body(previewService.convertPptxToImage(resource));
+                } else if (FileTypeUtil.isXlsx(mimeType)) {
+                    return ResponseEntity.ok().contentType(mediaType)
+                            .body(previewService.convertXlsxToImage(resource));
+                } else if (FileTypeUtil.isDocx(mimeType)) {
+                    return ResponseEntity.ok().contentType(mediaType)
+                            .body(previewService.convertDocxToImage(resource));
                 }
-                return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType))
+                return ResponseEntity.ok().contentType(mediaType)
                         .body(resource);
             }
             return badRequest(errorHandler.buildError(ErrorCode.FILETYPE_MAPPING_INVALID, ErrorInfo.builder()
