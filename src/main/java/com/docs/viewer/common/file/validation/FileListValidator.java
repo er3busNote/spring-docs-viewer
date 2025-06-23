@@ -3,11 +3,8 @@ package com.docs.viewer.common.file.validation;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,28 +41,18 @@ public class FileListValidator implements ConstraintValidator<ValidFileList, Lis
                 return false; // 파일 크기 초과
             }
 
-            // 파일 형식 검사 (예: 이미지 파일만 허용)
-            if (isImageContentType(file)) {
-                return false; // 이미지가 아닌 파일은 유효하지 않음
-            }
-
-            // 추가적인 이미지 유효성 검사
-            try {
-                BufferedImage image = ImageIO.read(file.getInputStream());
-                if (image == null) {
-                    return false; // 손상된 이미지 파일
-                }
-            } catch (IOException e) {
-                return false; // 이미지 파일 읽기 오류
+            // 파일 형식 검사
+            if (!isContentType(file)) {
+                return false;
             }
         }
 
         return true; // 모든 파일이 유효하면 true
     }
 
-    private boolean isImageContentType(MultipartFile file) {
+    private boolean isContentType(MultipartFile file) {
         String contentType = file.getContentType();
-        return contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType);
+        return ALLOWED_CONTENT_TYPES.contains(contentType);
     }
 
     private String getAllowedContentTypesAsString() {

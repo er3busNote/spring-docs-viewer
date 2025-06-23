@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -27,7 +27,6 @@ public class FileService {
     private static final String FILE_DIRECTORY = "cmmn";
 
     private final FileRepository fileRepository;
-    private final ObjectStorageUtil objectStorageUtil;
     private final FileSetting fileSetting;
 
     @Transactional
@@ -35,9 +34,7 @@ public class FileService {
         Optional<File> info = this.fileRepository.findById(attachFile.longValue());
         if (info.isPresent()) {
             File file = info.get();
-            if('Y' == file.getCloudYn()) {
-                return this.objectStorageUtil.downloadFile(file.getFilePath());
-            } else {
+            if('N' == file.getCloudYn()) {
                 String rootPath = fileSetting.getFilepath();
                 String filePath = file.getFilePath().replace("..", rootPath);
                 return CryptoUtil.decryptFile(filePath);
@@ -58,25 +55,8 @@ public class FileService {
     }
 
     @Transactional
-    public FileInfo saveBucketFile(MultipartFile file) throws IOException {
-        String bucketPath = this.getBucketPath();
-        String fileName = file.getOriginalFilename();
-        String contentType = file.getContentType();
-        Integer fileSize = Integer.valueOf(String.valueOf(file.getSize()));
-        File fileInfo = this.fileRepository.save(File.of(fileName, bucketPath, contentType, fileSize, 'Y'));
-        this.objectStorageUtil.uploadFile(file, bucketPath);
-        return FileInfo.of(fileInfo);
-    }
-
-    @Transactional
     public List<FileAttachInfo> saveFile(List<MultipartFile> files) throws Exception {
         List<FileInfo> fileInfoList = files.stream().map(ExceptionUtil.wrapFunction(file -> this.saveFile(file, FILE_DIRECTORY))).collect(Collectors.toList());
-        return fileInfoList.stream().map(FileAttachInfo::of).collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<FileAttachInfo> saveBucketFile(List<MultipartFile> files) throws Exception {
-        List<FileInfo> fileInfoList = files.stream().map(ExceptionUtil.wrapFunction(file -> this.saveBucketFile(file))).collect(Collectors.toList());
         return fileInfoList.stream().map(FileAttachInfo::of).collect(Collectors.toList());
     }
 
@@ -86,9 +66,5 @@ public class FileService {
 
     private String getFilePath(Path uploadDirectory) {
         return uploadDirectory.toString() + "/" + UUID.randomUUID();
-    }
-
-    private String getBucketPath() {
-        return DateUtil.getCurrentDate() + "/" + UUID.randomUUID();
     }
 }

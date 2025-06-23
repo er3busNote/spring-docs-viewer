@@ -8,10 +8,10 @@
 Spring 기반 문서 뷰어 구현
 
 ## Init Setting
-- [Spring Data JPA](https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.7.3&packaging=jar&jvmVersion=1.8&groupId=com.docs&artifactId=viewer&name=viewer&description=Spring%20project%20for%20Docs%20Viewer&packageName=com.docs.viewer&dependencies=data-jpa,validation,devtools,mariadb,lombok)
+- [Spring Data JPA](https://start.spring.io/#!type=gradle-project&language=java&platformVersion=3.5.3&packaging=jar&jvmVersion=17&groupId=com.docs&artifactId=viewer&name=viewer&description=Spring%20project%20for%20Docs%20Viewer&packageName=com.docs.viewer&dependencies=data-jpa,validation,devtools,mariadb,lombok)
 
 ## Compatible
-- JAVA: OpenJDK 1.8.0_282
+- JAVA: OpenJDK 17
 - DB: 10.4.11-MariaDB
 
 ## Contact us

@@ -1,8 +1,8 @@
 package com.docs.viewer.common.file.api;
 
+import com.docs.viewer.common.file.dto.request.FileUploadRequest;
 import com.docs.viewer.common.file.dto.response.FileResponse;
 import com.docs.viewer.common.file.service.FileService;
-import com.docs.viewer.common.file.validation.ValidFileList;
 import com.docs.viewer.common.preview.service.PreviewService;
 import com.docs.viewer.global.common.dto.response.ResponseHandler;
 import com.docs.viewer.global.common.utils.FileTypeUtil;
@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +31,7 @@ public class FileController {
     private final ErrorHandler errorHandler;
 
     @GetMapping
-    public ResponseEntity fileImage(@RequestParam Integer attachFile) {
+    public ResponseEntity<?> fileImage(@RequestParam Integer attachFile) {
         try {
             FileResponse fileResponse = this.findFile(attachFile);
             String mimeType = fileResponse.getMimeType();
@@ -65,20 +65,10 @@ public class FileController {
     }
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> uploadFiles(@RequestParam(name = "files") @Valid @ValidFileList List<MultipartFile> files) {
+    public ResponseEntity<?> uploadFiles(@ModelAttribute @Valid FileUploadRequest request) {
         try {
+            List<MultipartFile> files = request.getFiles();
             return ResponseEntity.ok().body(fileService.saveFile(files));
-        } catch (Exception e) {
-            return unprocessableEntity(errorHandler.buildError(ErrorCode.INTERNAL_SERVER_ERROR, ErrorInfo.builder()
-                    .message(e.getMessage())
-                    .build()));
-        }
-    }
-
-    @PostMapping(value = "/upload/bucket", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> uploadBucketFiles(@RequestParam(name = "files") @Valid @ValidFileList List<MultipartFile> files) {
-        try {
-            return ResponseEntity.ok().body(fileService.saveBucketFile(files));
         } catch (Exception e) {
             return unprocessableEntity(errorHandler.buildError(ErrorCode.INTERNAL_SERVER_ERROR, ErrorInfo.builder()
                     .message(e.getMessage())

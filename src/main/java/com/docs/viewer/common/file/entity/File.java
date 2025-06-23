@@ -2,12 +2,10 @@ package com.docs.viewer.common.file.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,13 +17,13 @@ import java.time.LocalDateTime;
 public class File {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "fileCode")
-    @GenericGenerator(name = "fileCode", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "CMM_FILE_SEQUENCE"),
-                    @Parameter(name = "initial_value", value = "100000"),
-                    @Parameter(name = "increment_size", value = "1")
-            })
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fileCode")
+    @SequenceGenerator(
+            name = "fileCode",
+            sequenceName = "CMM_FILE_SEQUENCE",
+            initialValue = 100000,
+            allocationSize = 1
+    )
     @Column(name = "FILE_CD", columnDefinition = "BIGINT(20) COMMENT '파일코드'")
     private Long fileCode;
 
