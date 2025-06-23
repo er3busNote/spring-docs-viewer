@@ -38,7 +38,7 @@ public class FileController {
             if (FileTypeUtil.isAllowType(mimeType)) {
                 ByteArrayResource resource = fileResponse.getResource();
                 MediaType mediaType = MediaType.parseMediaType(mimeType);
-                if(FileTypeUtil.isPdf(mimeType)) {
+                if(FileTypeUtil.isPptx(mimeType)) {
                     return ResponseEntity.ok().contentType(mediaType)
                             .body(previewService.convertPptxToImage(resource));
                 } else if (FileTypeUtil.isXlsx(mimeType)) {
@@ -47,6 +47,9 @@ public class FileController {
                 } else if (FileTypeUtil.isDocx(mimeType)) {
                     return ResponseEntity.ok().contentType(mediaType)
                             .body(previewService.convertDocxToImage(resource));
+                } else if (FileTypeUtil.isPdf(mimeType)) {
+                    return ResponseEntity.ok().contentType(mediaType)
+                            .body(previewService.convertPdfToImage(resource));
                 }
                 return ResponseEntity.ok().contentType(mediaType)
                         .body(resource);

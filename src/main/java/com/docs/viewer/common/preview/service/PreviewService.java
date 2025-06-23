@@ -28,6 +28,41 @@ import java.io.InputStream;
 @Service
 public class PreviewService {
 
+    public ByteArrayResource convertPdfToImage(ByteArrayResource pdfResource) throws Exception {
+        try (InputStream pdfInputStream = pdfResource.getInputStream();
+             PDDocument pdfDocument = Loader.loadPDF(new RandomAccessReadBuffer(pdfInputStream))) {
+
+            PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
+            int pageCount = pdfDocument.getNumberOfPages();
+
+            BufferedImage[] pageImages = new BufferedImage[pageCount];
+            int totalHeight = 0;
+            int maxWidth = 0;
+
+            for (int page = 0; page < pageCount; page++) {
+                BufferedImage pageImage = pdfRenderer.renderImageWithDPI(page, 200);
+                pageImages[page] = pageImage;
+                totalHeight += pageImage.getHeight();
+                maxWidth = Math.max(maxWidth, pageImage.getWidth());
+            }
+
+            BufferedImage fullImage = new BufferedImage(maxWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = fullImage.createGraphics();
+            g2d.setPaint(Color.WHITE);
+            g2d.fillRect(0, 0, maxWidth, totalHeight);
+
+            int yOffset = 0;
+            for (BufferedImage pageImage : pageImages) {
+                g2d.drawImage(pageImage, 0, yOffset, null);
+                yOffset += pageImage.getHeight();
+            }
+
+            ByteArrayOutputStream imageOutput = new ByteArrayOutputStream();
+            ImageIO.write(fullImage, "png", imageOutput);
+            return new ByteArrayResource(imageOutput.toByteArray());
+        }
+    }
+
     public ByteArrayResource convertDocxToImage(ByteArrayResource docxResource) throws Exception {
         // DOCX → PDF 변환
         try (InputStream docxInputStream = docxResource.getInputStream();
