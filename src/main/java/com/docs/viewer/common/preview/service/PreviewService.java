@@ -28,7 +28,7 @@ public class PreviewService {
     }
 
     public ByteArrayResource convertXlsxToImage(ByteArrayResource xlsxResource) throws Exception {
-        List<ByteArrayResource> xlsxImages = DocumentUtil.convertPptxToImageResources(xlsxResource);
+        List<ByteArrayResource> xlsxImages = DocumentUtil.convertXlsxToImageResources(xlsxResource);
         return DocumentUtil.mergeImagesVertically(xlsxImages);
     }
 }
