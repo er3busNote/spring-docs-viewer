@@ -25,7 +25,7 @@ public class FileTest extends BaseTest {
                         .file(file2)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

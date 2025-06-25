@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +33,7 @@ public class FileService {
         if (info.isPresent()) {
             File file = info.get();
             if('N' == file.getCloudYn()) {
-                String rootPath = fileSetting.getFilepath();
+                String rootPath = fileSetting.getFilePath();
                 String filePath = file.getFilePath().replace("..", rootPath);
                 return CryptoUtil.decryptFile(filePath);
             }
@@ -45,26 +43,19 @@ public class FileService {
 
     @Transactional
     public FileInfo saveFile(MultipartFile file, String targetFolder) throws Exception {
-        Path uploadDirectory = FileUtil.getUploadDirectory(this.getDirectory(targetFolder));
+        String rootPath = fileSetting.getFilePath();
+        Path uploadDirectory = FileUtil.getUploadDirectory(FileUtil.getDirectory(rootPath, targetFolder));
         String fileName = file.getOriginalFilename();
         String contentType = file.getContentType();
         Integer fileSize = Integer.valueOf(String.valueOf(file.getSize()));
-        File fileInfo = this.fileRepository.save(File.of(fileName, this.getFilePath(uploadDirectory), contentType, fileSize, 'N'));
-        CryptoUtil.encryptFile(file, FileUtil.getTargetFile(fileInfo.getFilePath()));  // 파일 저장
+        File fileInfo = this.fileRepository.save(File.of(fileName, FileUtil.getFilePath(uploadDirectory), contentType, fileSize, 'N'));
+        CryptoUtil.encryptFile(file.getBytes(), FileUtil.getTargetFile(fileInfo.getFilePath()));  // 파일 저장
         return FileInfo.of(fileInfo);
     }
 
     @Transactional
     public List<FileAttachInfo> saveFile(List<MultipartFile> files) throws Exception {
-        List<FileInfo> fileInfoList = files.stream().map(ExceptionUtil.wrapFunction(file -> this.saveFile(file, FILE_DIRECTORY))).collect(Collectors.toList());
-        return fileInfoList.stream().map(FileAttachInfo::of).collect(Collectors.toList());
-    }
-
-    private String getDirectory(String targetFolder) {
-        return targetFolder + "/" + DateUtil.getCurrentDate();
-    }
-
-    private String getFilePath(Path uploadDirectory) {
-        return uploadDirectory.toString() + "/" + UUID.randomUUID();
+        List<FileInfo> fileInfoList = files.stream().map(ExceptionUtil.wrapFunction(file -> this.saveFile(file, FILE_DIRECTORY))).toList();
+        return fileInfoList.stream().map(FileAttachInfo::of).toList();
     }
 }

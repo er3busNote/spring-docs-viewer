@@ -8,6 +8,7 @@ import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -15,24 +16,24 @@ public class FileUtil {
 
     private static final String PROJECT_DIRECTORY = System.getProperty("user.dir");
 
-    private final FileSetting fileSetting;
 
-    private static String filepath;
-
-    @PostConstruct
-    public void init() {
-        filepath = fileSetting.getFilepath();
+    public static Path getDirectory(String filepath, String targetFolder) {
+        String directoryPath =  targetFolder + "/" + DateUtil.getCurrentDate();
+        Path folderPath = Paths.get(filepath);
+        return folderPath.resolve(directoryPath);
     }
 
-    public static Path getUploadDirectory(String directoryPath) {
-        Path folderPath = Paths.get(filepath);
-        Path uploadDirectory = folderPath.resolve(directoryPath);
+    public static Path getUploadDirectory(Path uploadDirectory) {
         createDirectory(uploadDirectory.toString()); // 업로드할 디렉토리가 없으면 생성
         return uploadDirectory;
     }
 
     public static File getTargetFile(String targetFilePath) {
         return new File(PROJECT_DIRECTORY + "/" + targetFilePath);
+    }
+
+    public static String getFilePath(Path uploadDirectory) {
+        return uploadDirectory.toString() + "/" + UUID.randomUUID();
     }
 
     public static String getFileExtension(String fileName) {

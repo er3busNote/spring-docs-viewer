@@ -13,5 +13,8 @@ import jakarta.validation.constraints.NotEmpty;
 public class FileSetting {
 
     @NotEmpty
-    private String filepath;
+    private String filePath;
+
+    @NotEmpty
+    private String imagePath;
 }

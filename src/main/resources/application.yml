@@ -54,4 +54,5 @@ crypto-setting:
   salt: mo2ver_salt
 
 file-setting:
-  filepath: ./data/files
+  file-path: ./data/files
+  image-path: ./data/images

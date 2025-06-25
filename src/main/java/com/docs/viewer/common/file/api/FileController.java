@@ -1,5 +1,6 @@
 package com.docs.viewer.common.file.api;
 
+import com.docs.viewer.common.file.dto.FileAttachInfo;
 import com.docs.viewer.common.file.dto.request.FileUploadRequest;
 import com.docs.viewer.common.file.dto.response.FileResponse;
 import com.docs.viewer.common.file.service.FileService;
@@ -13,12 +14,15 @@ import com.docs.viewer.global.error.dto.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -36,21 +40,8 @@ public class FileController {
             FileResponse fileResponse = this.findFile(attachFile);
             String mimeType = fileResponse.getMimeType();
             if (FileTypeUtil.isAllowType(mimeType)) {
-                ByteArrayResource resource = fileResponse.getResource();
+                ByteArrayResource resource = previewService.findFile(fileResponse);
                 MediaType mediaType = MediaType.parseMediaType(mimeType);
-                if(FileTypeUtil.isPptx(mimeType)) {
-                    return ResponseEntity.ok().contentType(mediaType)
-                            .body(previewService.convertPptxToImage(resource));
-                } else if (FileTypeUtil.isXlsx(mimeType)) {
-                    return ResponseEntity.ok().contentType(mediaType)
-                            .body(previewService.convertXlsxToImage(resource));
-                } else if (FileTypeUtil.isDocx(mimeType)) {
-                    return ResponseEntity.ok().contentType(mediaType)
-                            .body(previewService.convertDocxToImage(resource));
-                } else if (FileTypeUtil.isPdf(mimeType)) {
-                    return ResponseEntity.ok().contentType(mediaType)
-                            .body(previewService.convertPdfToImage(resource));
-                }
                 return ResponseEntity.ok().contentType(mediaType)
                         .body(resource);
             }
@@ -68,7 +59,17 @@ public class FileController {
     public ResponseEntity<?> uploadFiles(@ModelAttribute @Valid FileUploadRequest request) {
         try {
             List<MultipartFile> files = request.getFiles();
-            return ResponseEntity.ok().body(fileService.saveFile(files));
+            List<FileAttachInfo> fileAttachInfos = fileService.saveFile(files);
+            for (FileAttachInfo fileAttachInfo : fileAttachInfos) {
+                Integer attachFile = fileAttachInfo.getFileAttachCode();
+                FileResponse fileResponse = this.findFile(attachFile);
+                previewService.saveFile(fileResponse);
+            }
+            return ResponseEntity.created(URI.create("/create"))
+                    .body(ResponseHandler.builder()
+                            .status(HttpStatus.CREATED.value())
+                            .message("파일이 업로드 되었습니다")
+                            .build());
         } catch (Exception e) {
             return unprocessableEntity(errorHandler.buildError(ErrorCode.INTERNAL_SERVER_ERROR, ErrorInfo.builder()
                     .message(e.getMessage())

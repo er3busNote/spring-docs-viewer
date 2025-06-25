@@ -39,9 +39,7 @@ public class CryptoUtil {
     }
 
     // 참고 (Java AES Encryption and Decryption) : https://howtodoinjava.com/java/java-security/aes-256-encryption-decryption/
-    public static void encryptFile(MultipartFile file, File targetFile) throws Exception {
-        // 파일 읽기
-        byte[] fileBytes = file.getBytes();
+    public static void encryptFile(byte[] fileBytes, File targetFile) throws Exception {
 
         // 키 생성
         SecretKey key = generateKey(password, salt);

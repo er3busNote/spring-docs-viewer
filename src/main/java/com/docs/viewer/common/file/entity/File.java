@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "CMM_FILE")   // 상품
 @Getter @Setter
 @EqualsAndHashCode(of = "fileCode")
-@Builder @NoArgsConstructor
-@AllArgsConstructor
+@Builder @NoArgsConstructor @AllArgsConstructor
 public class File {
 
     @Id
