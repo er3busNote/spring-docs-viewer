@@ -39,7 +39,7 @@ public class PreviewService {
     }
 
     @Transactional
-    public void saveFile(ByteArrayResource image,  String targetFolder) throws Exception {
+    public void saveFile(Integer attachFile, ByteArrayResource image,  String targetFolder) throws Exception {
         String rootPath = fileSetting.getImagePath();
         Path uploadDirectory = FileUtil.getUploadDirectory(FileUtil.getDirectory(rootPath, targetFolder));
         String uploadPath = FileUtil.getFilePath(uploadDirectory);
@@ -47,15 +47,15 @@ public class PreviewService {
     }
 
     @Transactional
-    public void saveFile(FileResponse fileResponse) throws Exception {
+    public void saveFile(Integer attachFile, FileResponse fileResponse) throws Exception {
         ByteArrayResource resource = fileResponse.getResource();
         String mimeType = fileResponse.getMimeType();
         PreviewType previewType = this.getPreviewType(mimeType);
         switch (previewType) {
-            case PPTX -> createPptxToImage(resource);
-            case XLSX -> createXlsxToImage(resource);
-            case DOCX -> createDocxToImage(resource);
-            case PDF -> createPdfToImage(resource);
+            case PPTX -> createPptxToImage(attachFile, resource);
+            case XLSX -> createXlsxToImage(attachFile, resource);
+            case DOCX -> createDocxToImage(attachFile, resource);
+            case PDF -> createPdfToImage(attachFile, resource);
             default -> {
             }
         }
@@ -80,10 +80,10 @@ public class PreviewService {
         return DocumentUtil.mergeImagesVertically(pdfImages);
     }
 
-    private void createPdfToImage(ByteArrayResource pdfResource) throws Exception {
+    private void createPdfToImage(Integer attachFile, ByteArrayResource pdfResource) throws Exception {
         List<ByteArrayResource> pdfImages = DocumentUtil.convertPdfToImageResources(pdfResource);
         for (ByteArrayResource pdfImage : pdfImages) {
-            this.saveFile(pdfImage, FILE_DIRECTORY);
+            this.saveFile(attachFile, pdfImage, FILE_DIRECTORY);
         }
     }
 
@@ -92,10 +92,10 @@ public class PreviewService {
         return DocumentUtil.mergeImagesVertically(docxImages);
     }
 
-    private void createDocxToImage(ByteArrayResource docxResource) throws Exception {
+    private void createDocxToImage(Integer attachFile, ByteArrayResource docxResource) throws Exception {
         List<ByteArrayResource> docxImages = DocumentUtil.convertDocxToImageResources(docxResource);
         for (ByteArrayResource docxImage : docxImages) {
-            this.saveFile(docxImage, FILE_DIRECTORY);
+            this.saveFile(attachFile, docxImage, FILE_DIRECTORY);
         }
     }
 
@@ -104,10 +104,10 @@ public class PreviewService {
         return DocumentUtil.mergeImagesVertically(pptxImages);
     }
 
-    private void createPptxToImage(ByteArrayResource pptxResource) throws Exception {
+    private void createPptxToImage(Integer attachFile, ByteArrayResource pptxResource) throws Exception {
         List<ByteArrayResource> pptxImages = DocumentUtil.convertPptxToImageResources(pptxResource);
         for (ByteArrayResource pptxImage : pptxImages) {
-            this.saveFile(pptxImage, FILE_DIRECTORY);
+            this.saveFile(attachFile, pptxImage, FILE_DIRECTORY);
         }
     }
 
@@ -116,10 +116,10 @@ public class PreviewService {
         return DocumentUtil.mergeImagesVertically(xlsxImages);
     }
 
-    private void createXlsxToImage(ByteArrayResource xlsxResource) throws Exception {
+    private void createXlsxToImage(Integer attachFile, ByteArrayResource xlsxResource) throws Exception {
         List<ByteArrayResource> xlsxImages = DocumentUtil.convertXlsxToImageResources(xlsxResource);
         for (ByteArrayResource xlsxImage : xlsxImages) {
-            this.saveFile(xlsxImage, FILE_DIRECTORY);
+            this.saveFile(attachFile, xlsxImage, FILE_DIRECTORY);
         }
     }
 }

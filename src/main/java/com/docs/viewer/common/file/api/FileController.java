@@ -63,7 +63,7 @@ public class FileController {
             for (FileAttachInfo fileAttachInfo : fileAttachInfos) {
                 Integer attachFile = fileAttachInfo.getFileAttachCode();
                 FileResponse fileResponse = this.findFile(attachFile);
-                previewService.saveFile(fileResponse);
+                previewService.saveFile(attachFile, fileResponse);
             }
             return ResponseEntity.created(URI.create("/create"))
                     .body(ResponseHandler.builder()
