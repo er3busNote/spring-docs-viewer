@@ -14,13 +14,13 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mariadb://${server.host.mariadb}:3309/mo2ver_dev
+    url: jdbc:mariadb://${server.host.mariadb}:3309/viewer
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     properties:
       hibernate:
         hbm2ddl:
-          auto: validate
+          auto: create
         jdbc:
           lob:
             non_contextual_creation: true

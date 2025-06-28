@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CMM_FILE")   // 상품
+@Table(name = "CMM_FILE")   // 공통 파일
 @Getter @Setter
 @EqualsAndHashCode(of = "fileCode")
 @Builder @NoArgsConstructor @AllArgsConstructor
