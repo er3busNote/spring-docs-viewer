@@ -1,0 +1,25 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+gradlePlugin {
+    plugins {
+        docsViewer {
+            id = 'com.docs.viewer'
+            implementationClass = 'com.docs.viewer.ViewerPlugin'
+            displayName = 'Docs Viewer Native Bridge Plugin'
+            description = 'Automatically builds and integrates native (C#, Go, JNI) code for Docs Viewer.'
+        }
+    }
+}

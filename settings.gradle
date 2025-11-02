@@ -1,3 +1,4 @@
 rootProject.name = 'viewer'
 
-include("spring-docs-viewer")
+include 'spring-docs-viewer'
+include 'spring-docs-viewer-plugin'
