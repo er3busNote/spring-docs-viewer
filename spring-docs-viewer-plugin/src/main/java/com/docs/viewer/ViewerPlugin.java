@@ -64,6 +64,7 @@ public class ViewerPlugin implements Plugin<Project> {
                             : isMac ? "libjni_docsviewer.dylib"
                             : "libjni_docsviewer.so";
                     project.exec(execSpec -> {
+                        execSpec.workingDir("jni");
                         execSpec.commandLine("gcc", "-fPIC", "-shared",
                                 "-o", new File(outputDir, jniLib).getAbsolutePath(),
                                 "native/jni_shim.c", "-ldl");
