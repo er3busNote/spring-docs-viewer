@@ -3,80 +3,97 @@ package com.docs.viewer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.process.ExecSpec;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ViewerPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        // DSL 등록
-        ViewerExtension ext = project.getExtensions()
-                .create("docsViewer", ViewerExtension.class);
+        project.getExtensions().create("docsViewer", ViewerExtension.class);
 
-        // 네이티브 빌드 태스크 생성
         Task docsViewerBuild = project.task("docsViewerBuild", task -> {
             task.setGroup("docs-viewer");
-            task.setDescription("Builds C#, Go, and JNI libraries for Docs Viewer");
+            task.setDescription("Builds JNI native library for Docs Viewer");
 
             task.doLast(t -> {
-                String os = System.getProperty("os.name").toLowerCase();
-                boolean isWin = os.contains("win");
-                boolean isMac = os.contains("mac");
-                boolean isLinux = os.contains("nux") || os.contains("linux");
+                try {
+                    // OS 감지
+                    String os = System.getProperty("os.name").toLowerCase();
+                    boolean isWin = os.contains("win");
+                    boolean isMac = os.contains("mac");
+                    boolean isLinux = os.contains("nux") || os.contains("linux");
 
-                project.getLogger().lifecycle("📦 DocsViewer Native Build - Detected OS: " + os);
+                    String javaHome = System.getenv("JAVA_HOME");
+                    if (javaHome == null) throw new RuntimeException("JAVA_HOME not set!");
 
-                File outputDir = ext.getOutputDir() != null ?
-                        ext.getOutputDir() :
-                        new File(project.getBuildDir(), "native");
+                    String includeBase = javaHome + "/include";
+                    String includePlatform = isMac ? "darwin" : (isWin ? "win32" : "linux");
 
-                if (!outputDir.exists()) {
-                    outputDir.mkdirs();
-                }
+                    String loInclude, loLib, outputExt;
 
-                // C# 빌드
-                if (ext.isEnableCs()) {
-                    String runtime = isWin ? "win-x64" : isMac ? "osx-x64" : "linux-x64";
-                    project.exec(execSpec -> {
-                        execSpec.workingDir("cs");
-                        execSpec.commandLine("dotnet", "publish", "-c", "Release", "-r", runtime,
-                                "/p:PublishAot=true", "/p:SelfContained=true");
+                    if (isMac) {
+                        loInclude = "/Applications/LibreOffice.app/Contents/sdk/include";
+                        loLib = "/Applications/LibreOffice.app/Contents/Frameworks";
+                        outputExt = "dylib";
+                    } else if (isLinux) {
+                        loInclude = "/usr/lib/libreoffice/sdk/include";
+                        loLib = "/usr/lib/libreoffice/program";
+                        outputExt = "so";
+                    } else if (isWin) {
+                        loInclude = "C:/Program Files/LibreOffice/sdk/include";
+                        loLib = "C:/Program Files/LibreOffice/program";
+                        outputExt = "dll";
+                    } else {
+                        throw new RuntimeException("Unsupported OS: " + os);
+                    }
+
+                    Path nativeDir = project.getProjectDir().toPath().resolve("native");
+                    if (!Files.exists(nativeDir)) Files.createDirectories(nativeDir);
+
+                    Path sourceFile = nativeDir.resolve("libreoffice_jni.c");
+                    if (!Files.exists(sourceFile))
+                        throw new RuntimeException("Missing JNI source file: " + sourceFile);
+
+                    String outputName = "libreoffice_jni." + outputExt;
+                    Path outputPath = nativeDir.resolve(outputName);
+
+                    // 이미 빌드되어 있으면 스킵
+                    if (Files.exists(outputPath)) {
+                        project.getLogger().lifecycle("✅ Native library already built: " + outputPath);
+                        return;
+                    }
+
+                    project.getLogger().lifecycle("🔧 Building JNI library using Gradle exec()...");
+
+                    // Gradle의 exec() 사용
+                    project.exec((ExecSpec execSpec) -> {
+                        execSpec.setWorkingDir(nativeDir.toFile());
+
+                        execSpec.commandLine(
+                                isWin ? "gcc.exe" : "gcc",
+                                "-fPIC",
+                                "-I" + includeBase,
+                                "-I" + includeBase + "/" + includePlatform,
+                                "-I" + loInclude,
+                                "-shared",
+                                sourceFile.toString(),
+                                "-L" + loLib,
+                                "-llibreofficekitgtk",
+                                "-o", outputPath.toString()
+                        );
                     });
-                    project.getLogger().lifecycle("✅ C# build completed");
-                }
 
-                // Go 빌드
-                if (ext.isEnableGo()) {
-                    String goLib = isWin ? "libdocsviewer.dll" : isMac ? "libdocsviewer.dylib" : "libdocsviewer.so";
-                    project.exec(execSpec -> {
-                        execSpec.workingDir("go");
-                        execSpec.commandLine("go", "build", "-buildmode=c-shared",
-                                "-o", new File(outputDir, goLib).getAbsolutePath(),
-                                "bridge.go");
-                    });
-                    project.getLogger().lifecycle("✅ Go build completed");
-                }
+                    project.getLogger().lifecycle("✅ Native build complete: " + outputPath);
 
-                // JNI 빌드
-                if (ext.isEnableJni()) {
-                    String jniLib = isWin ? "jni_docsviewer.dll"
-                            : isMac ? "libjni_docsviewer.dylib"
-                            : "libjni_docsviewer.so";
-                    project.exec(execSpec -> {
-                        execSpec.workingDir("jni");
-                        execSpec.commandLine("gcc", "-fPIC", "-shared",
-                                "-o", new File(outputDir, jniLib).getAbsolutePath(),
-                                "native/jni_shim.c", "-ldl");
-                    });
-                    project.getLogger().lifecycle("✅ JNI build completed");
+                } catch (Exception e) {
+                    throw new RuntimeException("JNI build failed: " + e.getMessage(), e);
                 }
-
-                project.getLogger().lifecycle("🎉 DocsViewer native build finished successfully!");
             });
         });
 
-        // 기본 빌드와 연결
         project.getTasks().getByName("build").dependsOn(docsViewerBuild);
     }
 }
