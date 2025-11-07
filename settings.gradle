@@ -2,5 +2,6 @@ rootProject.name = 'viewer'
 
 include 'spring-docs-viewer'
 include 'spring-docs-viewer-plugin'
-include 'spring-docs-viewer-libre-office'
 include 'spring-docs-viewer-activex'
+include 'spring-docs-viewer-libre-office-maven'
+include 'spring-docs-viewer-libre-office-plugin'

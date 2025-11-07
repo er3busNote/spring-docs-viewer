@@ -1,0 +1,99 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def os = System.getProperty("os.name").toLowerCase()
+def isWin = os.contains("win")
+def isMac = os.contains("mac")
+def isLinux = os.contains("nux") || os.contains("linux")
+
+tasks.register('nativeBuild', Exec) {
+    group = "docs-viewer"
+    description = "Builds JNI native library for LibreOffice"
+
+    workingDir "$projectDir/native"
+
+    // ✅ JAVA_HOME 없을 때 fallback
+    def javaHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
+    if (javaHome == null) throw new GradleException("JAVA_HOME not set or java.home not found") as Throwable
+
+    def includeBase = "$javaHome/include"
+    def includePlatform = isMac ? "darwin" : (isWin ? "win32" : "linux")
+
+    def loInclude
+    def loLib
+    def outputExt
+
+    if (isMac) {
+        loInclude = "/Applications/LibreOffice.app/Contents/sdk/include"
+        loLib = "/Applications/LibreOffice.app/Contents/Frameworks"
+        outputExt = "dylib"
+    } else if (isLinux) {
+        loInclude = "/usr/lib/libreoffice/sdk/include"
+        loLib = "/usr/lib/libreoffice/program"
+        outputExt = "so"
+    } else if (isWin) {
+        loInclude = "C:/Program Files/LibreOffice/sdk/include"
+        loLib = "C:/Program Files/LibreOffice/program"
+        outputExt = "dll"
+    } else {
+        throw new GradleException("Unsupported OS: $os")
+    }
+
+    def srcFile = "$projectDir/native/libreoffice_jni.c"
+    def outputFile = "$projectDir/native/libreoffice_jni.${outputExt}"
+
+    if (isWin) {
+        commandLine 'cmd', '/c', 'gcc', '-shared',
+                '-I' + includeBase,
+                '-I' + includeBase + '/' + includePlatform,
+                '-I' + loInclude,
+                '-L' + loLib,
+                '-llibreofficekitgtk',
+                srcFile,
+                '-o', outputFile
+    } else {
+        commandLine 'bash', '-c', """
+            gcc -fPIC -shared \
+            -I${includeBase} \
+            -I${includeBase}/${includePlatform} \
+            -I${loInclude} \
+            -L${loLib} -llibreofficekitgtk \
+            ${srcFile} -o ${outputFile}
+        """
+    }
+}
+
+// 빌드 후 결과물을 리소스로 복사
+tasks.register('copyNativeToResources', Copy) {
+    dependsOn nativeBuild
+    from("$projectDir/native") {
+        include('*.dll', '*.so', '*.dylib')
+    }
+    into("$projectDir/src/main/resources/native/" + (
+            isLinux ? 'linux' :
+                    isMac ? 'macos' :
+                            'windows'))
+}
+
+processResources.dependsOn(copyNativeToResources)
+
+// Maven 배포 설정
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'com.docs.viewer'
+            artifactId = 'libreoffice-jni'
+            version = '1.0.0'
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
