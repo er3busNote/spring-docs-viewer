@@ -17,14 +17,14 @@ Spring 기반 문서 뷰어 구현
 ## Progress
 1. spring-docs-viewer-libre-office-{plugin,maven}
    - LibreOffice + JNI 조합
-   - UNO(Universal Network Objects) API 기반
-   - 단점 #1 : UNO는 내부적으로 inter-process 통신을 사용하기 때문에 대량의 셀 처리나 문서 변환(Batch Processing) 시, 병목현상이 발생하기 쉬움
-   - 단점 #2 : 환경설정이 복잡하고, 버전 호환성 문제가 존재함 
+   - **UNO**(Universal Network Objects) API 기반
+   - 단점 #1 : UNO는 내부적으로 **inter-process 통신**을 사용하기 때문에 대량의 셀 처리나 문서 변환(Batch Processing) 시, **병목 현상**이 발생하기 쉬움
+   - 단점 #2 : **환경설정이 복잡**하고, **버전 호환성 문제**가 존재함 
 2. spring-docs-viewer-activex
-   - MS Office 프로그램을 자동 조작할 수 있게 해주는 COM 기반 C# API
-   - Interop는 ⌜문서 보기 전용 컨트롤⌟이 아니라, ⌜실제 Office를 띄우는 방식⌟
-   - 대게 ⌜문서 뷰어⌟ 보다는 ⌜자동 문서 생성/편집⌟에 더 자주 쓰임
-   - 단점 : 해당 PC에 Microsoft Office가 반드시 설치되어 있어야 함
+   - MS Office 프로그램을 자동 조작할 수 있게 해주는 **COM 기반** C# API
+   - Interop는 ⌜**문서 보기 전용 컨트롤**⌟이 아니라, ⌜**실제 Office를 띄우는 방식**⌟
+   - 대게 ⌜**문서 뷰어**⌟ 보다는 ⌜**자동 문서 생성/편집**⌟에 더 자주 쓰임
+   - 단점 : 해당 PC에 **Microsoft Office가 반드시 설치**되어 있어야 함
 3. spring-docs-viewer
    - Apache POI + Docx4j + PDFBox 조합 
 
