@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.docs'
+group = 'com.docs.viewer'
 version = '0.0.1-SNAPSHOT'
 
 java {

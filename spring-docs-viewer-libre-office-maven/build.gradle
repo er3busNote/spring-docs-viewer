@@ -3,8 +3,19 @@ plugins {
     id 'maven-publish'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+    withJavadocJar()
+}
+
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    compileOnly gradleApi()
 }
 
 def os = System.getProperty("os.name").toLowerCase()
@@ -13,12 +24,11 @@ def isMac = os.contains("mac")
 def isLinux = os.contains("nux") || os.contains("linux")
 
 tasks.register('nativeBuild', Exec) {
-    group = "docs-viewer"
+    group = project.group
     description = "Builds JNI native library for LibreOffice"
 
     workingDir "$projectDir/native"
 
-    // ✅ JAVA_HOME 없을 때 fallback
     def javaHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
     if (javaHome == null) throw new GradleException("JAVA_HOME not set or java.home not found") as Throwable
 
@@ -83,16 +93,26 @@ tasks.register('copyNativeToResources', Copy) {
 
 processResources.dependsOn(copyNativeToResources)
 
+tasks.withType(Jar).configureEach {
+    manifest {
+        attributes(
+                'Implementation-Title': 'LibreOffice JNI Builder',
+                'Implementation-Version': project.version
+        )
+    }
+}
+
 // Maven 배포 설정
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
             from components.java
-            groupId = 'com.docs.viewer'
+            groupId = project.group
             artifactId = 'libreoffice-jni'
-            version = '1.0.0'
+            version = project.version
         }
     }
+
     repositories {
         mavenLocal()
     }
