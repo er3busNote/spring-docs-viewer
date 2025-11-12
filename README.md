@@ -25,7 +25,10 @@ Spring 기반 문서 뷰어 구현
    - Interop는 ⌜**문서 보기 전용 컨트롤**⌟이 아니라, ⌜**실제 Office를 띄우는 방식**⌟
    - 대게 ⌜**문서 뷰어**⌟ 보다는 ⌜**자동 문서 생성/편집**⌟에 더 자주 쓰임
    - 단점 : 해당 PC에 **Microsoft Office가 반드시 설치**되어 있어야 함
-3. spring-docs-viewer
+3. spring-docs-viewer-core
+   - Java → JNI → Go → C# NativeAOT 조합
+   - 문서뷰어 엔진 리포지토리
+4. spring-docs-viewer
    - Apache POI + Docx4j + PDFBox 조합 
 
 ## Contact us
