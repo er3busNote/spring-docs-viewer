@@ -27,6 +27,7 @@ Spring 기반 문서 뷰어 구현
    - 단점 : 해당 PC에 **Microsoft Office가 반드시 설치**되어 있어야 함
 3. spring-docs-viewer-core
    - Java → JNI → Go → C# NativeAOT 조합
+   - C# 라이브러리 : OpenXML + SkiaSharp
    - 문서뷰어 엔진 리포지토리
 4. spring-docs-viewer
    - Apache POI + Docx4j + PDFBox 조합 
