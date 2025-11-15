@@ -39,7 +39,7 @@ public class ViewerPlugin implements Plugin<Project> {
                 if (ext.isEnableCs()) {
                     String runtime = isWin ? "win-x64" : isMac ? "osx-x64" : "linux-x64";
                     project.exec(execSpec -> {
-                        execSpec.workingDir("cs");
+                        execSpec.workingDir("cs/ViewerLib");
                         execSpec.commandLine("dotnet", "publish", "-c", "Release", "-r", runtime,
                                 "/p:PublishAot=true", "/p:SelfContained=true");
                     });
