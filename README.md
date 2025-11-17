@@ -28,9 +28,13 @@ Spring 기반 문서 뷰어 구현
 3. spring-docs-viewer-core
    - Java → JNI → Go → C# NativeAOT 조합
    - C# 라이브러리 : OpenXML + SkiaSharp
-   - 문서뷰어 엔진 리포지토리
+   - 문서뷰어 엔진 리포지토리로 활용하려 했으나, 유지보수가 용이하지 않아 Drop
 4. spring-docs-viewer
-   - Apache POI + Docx4j + PDFBox 조합 
+   - Apache POI + Docx4j + PDFBox 조합
+   - 순수 Java API로 구현
+5. dotnet-docs-viewer
+   - C# 라이브러리 : OpenXML + SkiaSharp
+   - 순수 Dotnet Core API로 구현
 
 ## Contact us
 - qudwn0768@naver.com
