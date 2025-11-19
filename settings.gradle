@@ -5,3 +5,6 @@ include 'spring-docs-viewer-core'
 include 'spring-docs-viewer-activex'
 include 'spring-docs-viewer-libre-office-maven'
 include 'spring-docs-viewer-libre-office-plugin'
+
+project(":spring-docs-viewer-libre-office-maven").projectDir = file("spring-docs-viewer-libre-office/maven")
+project(":spring-docs-viewer-libre-office-plugin").projectDir = file("spring-docs-viewer-libre-office/plugin")

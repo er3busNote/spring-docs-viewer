@@ -15,7 +15,7 @@ Spring 기반 문서 뷰어 구현
 - DB: 10.4.11-MariaDB
 
 ## Progress
-1. spring-docs-viewer-libre-office-{plugin,maven}
+1. spring-docs-viewer-libre-office/{plugin,maven}
    - LibreOffice + JNI 조합
    - **UNO**(Universal Network Objects) API 기반
    - 단점 #1 : UNO는 내부적으로 **inter-process 통신**을 사용하기 때문에 대량의 셀 처리나 문서 변환(Batch Processing) 시, **병목 현상**이 발생하기 쉬움
