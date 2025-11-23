@@ -1,4 +1,15 @@
+using NHibernate;
+using DB.Model;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// DB 세팅
+var cfg = DBHelper.ConfigureNHibernate();
+ISessionFactory sessionFactory = cfg.BuildSessionFactory();
+
+builder.Services.AddSingleton(sessionFactory);
+builder.Services.AddScoped(factory => 
+    factory.GetService<ISessionFactory>()!.OpenSession());
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
