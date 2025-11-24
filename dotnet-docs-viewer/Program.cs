@@ -1,5 +1,5 @@
-using NHibernate;
 using DB.Model;
+using NHibernate;
 
 var builder = WebApplication.CreateBuilder(args);
 

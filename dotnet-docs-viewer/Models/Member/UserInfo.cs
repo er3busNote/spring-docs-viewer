@@ -1,3 +1,4 @@
+using Common.Utils;
 using Newtonsoft.Json;
 using FluentNHibernate.Mapping;
 
@@ -14,10 +15,10 @@ namespace DB.Model
     {
         public UserInfoBaseMap()
         {
-            Table("Users");
+            Table(NamingUtils.ToSnakeUpperCase("Users"));
             Id(x => x.Id);
             Map(x => x.Name);
-            DiscriminateSubClassesOnColumn<string>("UserType");
+            DiscriminateSubClassesOnColumn<string>(NamingUtils.ToSnakeUpperCase("UserType")); 
         }
     }
 }
