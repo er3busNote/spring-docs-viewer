@@ -24,7 +24,7 @@ namespace DB.Model
             // NHibernate Configuration 객체 생성
             var nhConfig = Fluently.Configure()
                 .Database(MySQLConfiguration.Standard.ConnectionString(connectionString))
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserInfoBaseMap>()
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<FileInfoBaseMap>()
                     .Conventions.Add<UpperSnakeClassConvention>()
                     .Conventions.Add<UpperSnakePropertyConvention>()
                     .Conventions.Add<UpperSnakeIdConvention>()
