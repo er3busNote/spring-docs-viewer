@@ -1,3 +1,6 @@
+using Common.Security;
+using Common.Utils;
+using Configs;
 using DB.Model;
 using NHibernate;
 
@@ -7,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var cfg = DBHelper.ConfigureNHibernate();
 ISessionFactory sessionFactory = cfg.BuildSessionFactory();
 
+builder.Services.AddEncryption();
 builder.Services.AddSingleton(sessionFactory);
 builder.Services.AddScoped(factory => 
     factory.GetService<ISessionFactory>()!.OpenSession());
@@ -15,6 +19,11 @@ builder.Services.AddScoped(factory =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// 암호화 세팅
+EncryptUtils.Initialize(
+    app.Services.GetRequiredService<IAesStringEncryptor>()
+);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
