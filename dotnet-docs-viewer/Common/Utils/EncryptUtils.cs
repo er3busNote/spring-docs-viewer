@@ -1,4 +1,4 @@
-using Common.Security;
+using Common.Crypto;
 
 namespace Common.Utils
 {

@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Common.Security
+namespace Common.Crypto
 {
     public interface IAesStringEncryptor
     {

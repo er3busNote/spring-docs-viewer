@@ -1,29 +1,22 @@
 using Common.Utils;
+using DB.Model;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Instances;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
+using WebApp;
 
-namespace DB.Model
+namespace Common.Helper
 {
     public static class DBHelper
     {
-        public static Configuration ConfigureNHibernate()
+        public static Configuration ConfigureNHibernate(DbSetting dbSetting)
         {
-            // appsettings.json 읽기
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            var ddlOption = configuration["NHibernate:Hbm2DdlAuto"]?.ToLower();
-
             // NHibernate Configuration 객체 생성
             var nhConfig = Fluently.Configure()
-                .Database(MySQLConfiguration.Standard.ConnectionString(connectionString))
+                .Database(MySQLConfiguration.Standard.ConnectionString(dbSetting.ConnectionString))
                 .Mappings(m => m.FluentMappings
                     .AddFromAssemblyOf<FileInfoBaseMap>()
                     .AddFromAssemblyOf<PreviewInfoBaseMap>()
@@ -33,7 +26,7 @@ namespace DB.Model
                 ).BuildConfiguration();
             
             // Hbm2DdlAuto 처리
-            switch (ddlOption)
+            switch (dbSetting.Hbm2DdlAuto)
             {
                 case "create":
                     new SchemaExport(nhConfig).Create(true, true);
