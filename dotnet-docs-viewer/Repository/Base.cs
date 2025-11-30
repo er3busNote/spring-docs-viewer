@@ -14,42 +14,21 @@ namespace WebApp.Repository
     
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ISession _session;
+        protected readonly ISession Session;
 
         public Repository(ISession session)
         {
-            _session = session;
+            Session = session;
         }
 
-        public async Task<T?> GetByIdAsync(object id)
-        {
-            return await _session.GetAsync<T>(id);
-        }
+        public async Task<T?> GetByIdAsync(object id) => await Session.GetAsync<T>(id);
 
-        public async Task<IList<T>> GetAllAsync()
-        {
-            return await _session.Query<T>().ToListAsync();
-        }
+        public async Task<IList<T>> GetAllAsync() => await Session.Query<T>().ToListAsync();
 
-        public async Task SaveAsync(T entity)
-        {
-            using var tx = _session.BeginTransaction();
-            await _session.SaveAsync(entity);
-            await tx.CommitAsync();
-        }
+        public async Task SaveAsync(T entity) => await Session.SaveAsync(entity);
 
-        public async Task UpdateAsync(T entity)
-        {
-            using var tx = _session.BeginTransaction();
-            await _session.UpdateAsync(entity);
-            await tx.CommitAsync();
-        }
+        public async Task UpdateAsync(T entity) => await Session.UpdateAsync(entity);
 
-        public async Task DeleteAsync(T entity)
-        {
-            using var tx = _session.BeginTransaction();
-            await _session.DeleteAsync(entity);
-            await tx.CommitAsync();
-        }
+        public async Task DeleteAsync(T entity) => await Session.DeleteAsync(entity);
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using NHibernate;
 using WebApp.Repository;
+using WebApp.Service;
 using ISession = NHibernate.ISession;
 
 namespace WebApp
@@ -34,7 +35,25 @@ namespace WebApp
         /// <summary>DB 커넥션 정보</summary>
         public string ConnectionString => $"Server={Server};Database={Database};Port={Port};Uid={Uid};Pwd={Pwd};";
     }
-    
+
+    /// <summary> Crypto 저장을 위한 경로 </summary>
+    public class CryptoSetting
+    {
+        /// <summary>Crypto 비밀번호</summary>
+        public string Password { get; set; }
+        /// <summary>Crypto Salt</summary>
+        public string Salt { get; set; }
+    }
+
+    /// <summary> File 저장을 위한 경로 </summary>
+    public class FileSetting
+    {
+        /// <summary>File 저장 경로</summary>
+        public string FilePath { get; set; }
+        /// <summary>Image 저장 경로</summary>
+        public string ImagePath { get; set; }
+    }
+
     public class Startup
     {
         private IWebHostEnvironment Env { get; init; }
@@ -52,13 +71,20 @@ namespace WebApp
             var appSetting = Configuration.GetSection("AppSettings").Get<AppSettings>() ?? throw new Exception("AppSettings 섹션이 없습니다.");
             services.AddSingleton(appSetting);
             services.Configure<DbSetting>(Configuration.GetSection("AppSettings:DB"));
+            services.Configure<CryptoSetting>(Configuration.GetSection("AppSettings:Crypto"));
+            services.Configure<FileSetting>(Configuration.GetSection("AppSettings:File"));
             
             // ✅ NHibernate
             services.AddSingleton<DBService>();
             services.AddHostedService(sp => sp.GetRequiredService<DBService>());
             services.AddSingleton<ISessionFactory>(sp => sp.GetRequiredService<DBService>().SessionFactory);
             services.AddScoped<ISession>(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
+            services.AddScoped<FileService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            
+            // ✅ Crypto
+            services.AddSingleton<CryptoService>();
+            services.AddHostedService(sp => sp.GetRequiredService<CryptoService>());
             
             // ✅ Encryption
             services.AddSingleton<EncryptService>();

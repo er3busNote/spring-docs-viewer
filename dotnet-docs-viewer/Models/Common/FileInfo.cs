@@ -58,4 +58,20 @@ namespace DB.Model
         }
     }
     
+    public class FileInfoModel : FileInfoBaseModel
+    {
+        public static FileInfoModel Of(string fileName, string filePath, string fileType, int fileSize, char cloudYn)
+        {
+            return new FileInfoModel
+            {
+                FileName = fileName,
+                FilePath = filePath,
+                FileType = fileType,
+                FileSize = fileSize,
+                CloudYn = cloudYn,
+                Register = "M000000002",
+                Updater = "M000000002"
+            };
+        }
+    }
 }

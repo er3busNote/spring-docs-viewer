@@ -11,9 +11,6 @@ namespace DB.Model
     /// <returns>JSON 문자열</returns>
     public abstract class BaseModel : IBaseModel
     {
-        public virtual String ToJson()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
+        public virtual String ToJson() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }
