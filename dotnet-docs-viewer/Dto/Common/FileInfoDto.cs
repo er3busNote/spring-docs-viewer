@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace WebApp.Dto
 {
     [JsonObject]
-    public abstract class FileInfoDtoBaseModel : BaseModel
+    public abstract class FileInfoBaseDto : BaseDto
     {
         public virtual long FileCode { get; protected set; }
         public virtual string FileName { get; protected set; } = null!;
@@ -16,11 +16,11 @@ namespace WebApp.Dto
         public virtual string FileNameWithoutExtension { get; protected set; } = null!;
     }
     
-    public class FileInfoDtoModel : FileInfoDtoBaseModel
+    public class FileInfoDto : FileInfoBaseDto
     {
-        public static FileInfoDtoModel Of(FileInfoBaseModel fileInfo)
+        public static FileInfoDto Of(FileInfoBaseModel fileInfo)
         {
-            return new FileInfoDtoModel
+            return new FileInfoDto
             {
                 FileCode = fileInfo.FileCode,
                 FileName = fileInfo.FileName,

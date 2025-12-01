@@ -35,7 +35,7 @@ namespace WebApp.Service
             throw new InvalidOperationException("Cloud 파일은 아직 지원하지 않습니다.");
         }
         
-        public async Task<FileInfoDtoModel> SaveFileAsync(IFormFile file, string targetFolder)
+        public async Task<FileInfoDto> SaveFileAsync(IFormFile file, string targetFolder)
         {
             var rootPath = _fileSetting.Value.FilePath;
 
@@ -58,7 +58,7 @@ namespace WebApp.Service
             var fileBytes = await ToByteArrayAsync(file);
             CryptoUtil.EncryptFile(fileBytes, FileUtil.GetTargetFile(fileInfo.FilePath));
 
-            return FileInfoDtoModel.Of(fileInfo);
+            return FileInfoDto.Of(fileInfo);
         }
         
         private static async Task<byte[]> ToByteArrayAsync(IFormFile file)
