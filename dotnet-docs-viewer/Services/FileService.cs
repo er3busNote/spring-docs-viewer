@@ -8,6 +8,8 @@ namespace WebApp.Service
 {
     public class FileService
     {
+        private static readonly string FileDirectory = "cmmn";
+            
         private readonly IRepository<FileInfoBaseModel> _fileRepository;
         private readonly IOptions<FileSetting> _fileSetting;
 
@@ -35,7 +37,20 @@ namespace WebApp.Service
             throw new InvalidOperationException("Cloud 파일은 아직 지원하지 않습니다.");
         }
         
-        public async Task<FileInfoDto> SaveFileAsync(IFormFile file, string targetFolder)
+        public async Task<List<FileAttachInfoDto>> SaveFileAsync(List<IFormFile> files)
+        {
+            var result = new List<FileAttachInfoDto>();
+
+            foreach (var file in files)
+            {
+                var info = await SaveFileAsync(file, FileDirectory);
+                result.Add(FileAttachInfoDto.Of(info));
+            }
+
+            return result;
+        }
+        
+        private async Task<FileInfoDto> SaveFileAsync(IFormFile file, string targetFolder)
         {
             var rootPath = _fileSetting.Value.FilePath;
 

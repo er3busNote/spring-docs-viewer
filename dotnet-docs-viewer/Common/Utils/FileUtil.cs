@@ -2,7 +2,7 @@ namespace Common.Utils
 {
     public static class FileUtil
     {
-        private static readonly string PROJECT_DIRECTORY = Directory.GetCurrentDirectory();
+        private static readonly string ProjectDirectory = Directory.GetCurrentDirectory();
 
         /// <summary>업로드 디렉토리 경로 생성 (날짜 기준)</summary>
         public static string GetDirectory(string filepath, string targetFolder)
@@ -26,7 +26,7 @@ namespace Common.Utils
         public static FileInfo GetTargetFile(string targetFilePath)
         {
             return new FileInfo(
-                Path.Combine(PROJECT_DIRECTORY, targetFilePath)
+                Path.Combine(ProjectDirectory, targetFilePath)
             );
         }
 
