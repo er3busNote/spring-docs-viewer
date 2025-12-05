@@ -49,7 +49,7 @@ namespace Common.Helper
             public void Apply(IClassInstance instance)
             {
                 // 클래스명 -> 테이블명 변환
-                instance.Table(NamingUtils.ToSnakeUpperCase(instance.EntityType.Name));
+                instance.Table(NamingUtil.ToSnakeUpperCase(instance.EntityType.Name));
             }
         }
 
@@ -59,7 +59,7 @@ namespace Common.Helper
             public void Apply(IPropertyInstance instance)
             {
                 // 자동으로 컬럼명 적용 (Property.Name 사용)
-                instance.Column(NamingUtils.ToSnakeUpperCase(instance.Property.Name));
+                instance.Column(NamingUtil.ToSnakeUpperCase(instance.Property.Name));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Common.Helper
         {
             public void Apply(IIdentityInstance instance)
             {
-                instance.Column(NamingUtils.ToSnakeUpperCase(instance.Name));
+                instance.Column(NamingUtil.ToSnakeUpperCase(instance.Name));
             }
         }
 

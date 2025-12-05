@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Common.Utils
 {
-    public static class NamingUtils
+    public static class NamingUtil
     {
         public static string ToSnakeUpperCase(string name)
         {

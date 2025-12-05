@@ -15,10 +15,10 @@ namespace DB.Model
     {
         public UserInfoBaseMap()
         {
-            Table(NamingUtils.ToSnakeUpperCase("Users"));
+            Table(NamingUtil.ToSnakeUpperCase("Users"));
             Id(x => x.Id);
             Map(x => x.Name);
-            DiscriminateSubClassesOnColumn<string>(NamingUtils.ToSnakeUpperCase("UserType")); 
+            DiscriminateSubClassesOnColumn<string>(NamingUtil.ToSnakeUpperCase("UserType")); 
         }
     }
 }

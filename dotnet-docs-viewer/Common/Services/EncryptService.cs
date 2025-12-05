@@ -14,7 +14,7 @@ namespace Common.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            EncryptUtils.Initialize(Encryptor);
+            EncryptUtil.Initialize(Encryptor);
             return Task.CompletedTask;
         }
 

@@ -2,7 +2,7 @@ using Common.Crypto;
 
 namespace Common.Utils
 {
-    public static class EncryptUtils
+    public static class EncryptUtil
     {
         private static IAesStringEncryptor _encryptor;
 
