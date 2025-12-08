@@ -29,12 +29,14 @@ Spring 기반 문서 뷰어 구현
    - Java → JNI → Go → C# NativeAOT 조합
    - C# 라이브러리 : OpenXML + SkiaSharp
    - 문서뷰어 엔진 리포지토리로 활용하려 했으나, 유지보수가 용이하지 않아 Drop
-4. spring-docs-viewer
+4. dotnet-docs-viewer
+    - C# 라이브러리 : OpenXML + SkiaSharp
+    - 단점 #1 : DOCX → PNG로 변환시, 대응할수 있는 오픈소스가 존재하질 않음
+    - 단점 #2 : OpenXML SDK는 ⌜**파일의 구조(XML) 만 다룰 수 있는 조작 라이브러리**⌟이지 ⌜**Word 렌더링 엔진**⌟은 아님
+    - 순수 **Dotnet Core API**로 구현 불가
+5. spring-docs-viewer
    - Apache POI + Docx4j + PDFBox 조합
    - 순수 **Java API**로 구현
-5. dotnet-docs-viewer
-   - C# 라이브러리 : OpenXML + SkiaSharp
-   - 순수 **Dotnet Core API**로 구현
 
 ## Contact us
 - qudwn0768@naver.com
