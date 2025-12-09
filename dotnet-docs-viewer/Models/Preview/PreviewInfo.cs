@@ -79,4 +79,20 @@ namespace DB.Model
                 .Generated.Always();
         }
     }
+    
+    public class PreviewInfoModel : PreviewInfoBaseModel
+    {
+        public static PreviewInfoModel Of(FileInfoBaseModel fileInfo, string filePath, string fileType, int fileSize)
+        {
+            return new PreviewInfoModel
+            {
+                File = fileInfo,
+                FilePath = filePath,
+                FileType = fileType,
+                FileSize = fileSize,
+                Register = "M000000002",
+                Updater = "M000000002"
+            };
+        }
+    }
 }
