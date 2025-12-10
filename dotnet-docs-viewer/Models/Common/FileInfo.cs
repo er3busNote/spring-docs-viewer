@@ -6,7 +6,7 @@ namespace DB.Model
     [JsonObject]
     public abstract class FileInfoBaseModel : BaseModel
     {
-        public virtual long FileCode { get; set; }
+        public virtual int FileCode { get; set; }
         public virtual string FileName { get; set; }
         public virtual string FilePath { get; set; }
         public virtual string FileType { get; set; }

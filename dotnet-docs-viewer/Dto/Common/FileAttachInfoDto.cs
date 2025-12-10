@@ -5,7 +5,7 @@ namespace WebApp.Dto
     [JsonObject]
     public abstract class FileAttachInfoBaseDto : BaseDto
     {
-        public virtual long FileAttachCode { get; protected set; }
+        public virtual int FileAttachCode { get; protected set; }
         public virtual string FileName { get; protected set; } = null!;
         public virtual string FileType { get; protected set; } = null!;
         public virtual int? FileSize { get; protected set; }

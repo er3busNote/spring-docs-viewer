@@ -9,6 +9,13 @@ using WebApp.Types;
 
 namespace WebApp.Service
 {
+    public interface IPreviewService
+    {
+        Task<byte[]> FindFileAsync(FileResponse fileResponse);
+        Task SaveFileAsync(int attachFile, byte[] image, string targetFolder, int index);
+        Task SaveFileAsync(int attachFile, FileResponse fileResponse);
+    }
+    
     public class PreviewService
     {
         private readonly IRepository<FileInfoBaseModel> _fileRepository;

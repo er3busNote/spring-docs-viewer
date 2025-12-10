@@ -6,7 +6,13 @@ using WebApp.Repository;
 
 namespace WebApp.Service
 {
-    public class FileService
+    public interface IFileService
+    {
+        Task<byte[]> FindFileAsync(int attachFile);
+        Task<List<FileAttachInfoDto>> SaveFileAsync(List<IFormFile> files);
+    }
+    
+    public class FileService : IFileService
     {
         private static readonly string FileDirectory = "cmmn";
             
