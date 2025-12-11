@@ -78,11 +78,10 @@ namespace WebApp.Controllers
             }
             catch (Exception ex)
             {
-                var error = _errorHandler.BuildError(
+                return UnprocessableEntity(_errorHandler.BuildError(
                     ErrorCode.INTERNAL_SERVER_ERROR,
-                    new ErrorInfo { Message = ex.Message });
-
-                return UnprocessableEntity(error);
+                    new ErrorInfo { Message = ex.Message }
+                ));
             }
         }
 
