@@ -36,7 +36,7 @@ Spring 기반 문서 뷰어 구현
     - 순수 **Dotnet Core API**로 구현 불가
 5. spring-docs-viewer
    - Apache POI + Docx4j + PDFBox 조합
-   - 순수 **Java API**로 구현
+   - 순수 **Java API**로 구현 진행 中
 
 ## Contact us
 - qudwn0768@naver.com
