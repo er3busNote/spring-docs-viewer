@@ -3,8 +3,10 @@ rootProject.name = 'viewer'
 include 'spring-docs-viewer'
 include 'spring-docs-viewer-core'
 include 'spring-docs-viewer-jacob'
+include 'spring-docs-viewer-libre-office-common'
 include 'spring-docs-viewer-libre-office-maven'
 include 'spring-docs-viewer-libre-office-plugin'
 
+project(":spring-docs-viewer-libre-office-common").projectDir = file("spring-docs-viewer-libre-office/common")
 project(":spring-docs-viewer-libre-office-maven").projectDir = file("spring-docs-viewer-libre-office/maven")
 project(":spring-docs-viewer-libre-office-plugin").projectDir = file("spring-docs-viewer-libre-office/plugin")

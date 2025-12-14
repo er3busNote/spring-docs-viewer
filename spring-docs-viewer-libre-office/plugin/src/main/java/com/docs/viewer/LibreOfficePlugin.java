@@ -51,7 +51,7 @@ public class LibreOfficePlugin implements Plugin<Project> {
                         throw new RuntimeException("Unsupported OS: " + os);
                     }
 
-                    Path nativeDir = project.getProjectDir().toPath().resolve("native");
+                    Path nativeDir = CommonPaths.resolveNativePath(project);
                     if (!Files.exists(nativeDir)) Files.createDirectories(nativeDir);
 
                     Path sourceFile = nativeDir.resolve("libreoffice_jni.c");

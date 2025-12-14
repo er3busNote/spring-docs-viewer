@@ -54,7 +54,7 @@ public class LibreOfficeBuilder {
                 outputExt = "dll";
             }
 
-            File nativeDir = new File(project.getProjectDir(), "native");
+            File nativeDir = CommonPaths.resolveNativeFile(project);
             File sourceFile = new File(nativeDir, "libreoffice_jni.c");
             File outputFile = new File(nativeDir, "libreoffice_jni." + outputExt);
 
