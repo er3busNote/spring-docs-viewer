@@ -1,0 +1,50 @@
+server:
+  host:
+    mariadb: 127.0.0.1
+  port: 9080
+  error:
+    include-exception: false      # Response 에 Exception 을 표시할지
+    include-message: always       # Response 에 Exception Message 를 표시할지 (never | always | on_param)
+    include-stacktrace: on_param  # Response 에 Stack Trace 를 표시할지 (never | always | on_param) on_trace_params 은 deprecated
+    whitelabel.enabled: true      # 에러 발생 시 Spring 기본 에러 페이지 노출 여부
+
+spring:
+  application:
+    name: office
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mariadb://${server.host.mariadb}:3309/office
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        dialect.storage_engine: innodb
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        data:
+          mongodb:
+            repository:
+              query: DEBUG
+        security: DEBUG
+        web:
+          filter: DEBUG
