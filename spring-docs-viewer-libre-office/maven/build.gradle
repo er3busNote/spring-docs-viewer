@@ -3,20 +3,13 @@ plugins {
     id 'maven-publish'
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    withSourcesJar()
-    withJavadocJar()
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compileOnly gradleApi()
-    implementation project(":spring-docs-viewer-libre-office-common")
+    implementation project(":spring-docs-viewer-libre-office:common")
 }
 
 def os = System.getProperty("os.name").toLowerCase()

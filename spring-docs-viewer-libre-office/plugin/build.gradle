@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":spring-docs-viewer-libre-office-common")
+    implementation project(":spring-docs-viewer-libre-office:common")
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
