@@ -48,3 +48,11 @@ logging:
         security: DEBUG
         web:
           filter: DEBUG
+
+crypto-setting:
+  password: mo2ver_aes256cbc_pbkdf2
+  salt: mo2ver_salt
+
+file-setting:
+  file-path: ./data/files
+  image-path: ./data/images
