@@ -28,8 +28,6 @@ Spring 기반 문서 뷰어 구현
     - 설정이 복잡함
     - LibreOffice 버전에 따른 **호환성 문제** 존재
 
----
-
 ### 2. `spring-docs-viewer-jacob`
 - **구현 방식**
   - JACOB(Java-COM Bridge) 기반
@@ -39,8 +37,6 @@ Spring 기반 문서 뷰어 구현
   - 일반적으로 **문서 뷰어**보다는 **자동 문서 생성/편집** 용도로 많이 사용
 - **한계**
   - 해당 실행 환경에 **Microsoft Office가 반드시 설치**되어 있어야 함
-
----
 
 ### 3. `spring-docs-viewer-core`
 - **구현 방식**
@@ -53,8 +49,6 @@ Spring 기반 문서 뷰어 구현
 - **결론**
   - 구조가 복잡하고 **유지보수가 용이하지 않음**
   - 문서 뷰어 엔진 Repository로 활용하는 방향은 **Drop**
-
----
 
 ### 4. `dotnet-docs-viewer`
 - **구현 방식**
@@ -69,8 +63,6 @@ Spring 기반 문서 뷰어 구현
 - **결론**
   - OpenXML + SkiaSharp만으로는 **Word 문서 렌더링을 완전히 구현하기 어려움**
   - **순수 .NET Core API 기반 구현은 현실적으로 어려움**
-
----
 
 ### 5. `spring-docs-viewer` ⭐
 - **구현 방식**
