@@ -1,9 +1,1 @@
 rootProject.name = 'viewer'
-
-include 'spring-docs-viewer'
-include 'spring-docs-viewer-core'
-include 'spring-docs-viewer-jacob'
-include 'spring-docs-viewer-libre-office:jpa'
-include 'spring-docs-viewer-libre-office:common'
-include 'spring-docs-viewer-libre-office:maven'
-include 'spring-docs-viewer-libre-office:plugin'
