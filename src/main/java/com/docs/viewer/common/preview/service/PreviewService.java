@@ -6,9 +6,12 @@ import com.docs.viewer.common.file.repository.FileRepository;
 import com.docs.viewer.common.preview.entity.Preview;
 import com.docs.viewer.common.preview.repository.PreviewRepository;
 import com.docs.viewer.common.preview.type.PreviewType;
+import com.docs.viewer.global.common.converter.DocxConverter;
+import com.docs.viewer.global.common.converter.PdfConverter;
+import com.docs.viewer.global.common.converter.PptxConverter;
+import com.docs.viewer.global.common.converter.XlsxConverter;
 import com.docs.viewer.global.common.setting.FileSetting;
 import com.docs.viewer.global.common.utils.CryptoUtil;
-import com.docs.viewer.global.common.utils.DocumentUtil;
 import com.docs.viewer.global.common.utils.FileTypeUtil;
 import com.docs.viewer.global.common.utils.FileUtil;
 import com.docs.viewer.global.error.exception.NotFoundException;
@@ -31,6 +34,10 @@ public class PreviewService {
 
     private final FileRepository fileRepository;
     private final PreviewRepository previewRepository;
+    private final PptxConverter pptxConverter;
+    private final XlsxConverter xlsxConverter;
+    private final DocxConverter docxConverter;
+    private final PdfConverter pdfConverter;
     private final FileSetting fileSetting;
 
     public ByteArrayResource findFile(FileResponse fileResponse) throws Exception {
@@ -38,10 +45,10 @@ public class PreviewService {
         String mimeType = fileResponse.getMimeType();
         PreviewType previewType = this.getPreviewType(mimeType);
         return switch (previewType) {
-            case PPTX -> convertPptxToImage(resource);
-            case XLSX -> convertXlsxToImage(resource);
-            case DOCX -> convertDocxToImage(resource);
-            case PDF -> convertPdfToImage(resource);
+            case PPTX -> pptxConverter.convertPptxToImage(resource);
+            case XLSX -> xlsxConverter.convertXlsxToImage(resource);
+            case DOCX -> docxConverter.convertDocxToImage(resource);
+            case PDF -> pdfConverter.convertPdfToImage(resource);
             default -> resource;
         };
     }
@@ -64,12 +71,19 @@ public class PreviewService {
         String mimeType = fileResponse.getMimeType();
         PreviewType previewType = this.getPreviewType(mimeType);
         switch (previewType) {
-            case PPTX -> createPptxToImage(attachFile, resource);
-            case XLSX -> createXlsxToImage(attachFile, resource);
-            case DOCX -> createDocxToImage(attachFile, resource);
-            case PDF -> createPdfToImage(attachFile, resource);
+            case PPTX -> this.saveFile(attachFile, pptxConverter.createPptxToImages(resource));
+            case XLSX -> this.saveFile(attachFile, xlsxConverter.createXlsxToImages(resource));
+            case DOCX -> this.saveFile(attachFile, docxConverter.createDocxToImages(resource));
+            case PDF -> this.saveFile(attachFile, pdfConverter.createPdfToImages(resource));
             default -> {
             }
+        }
+    }
+
+    public void saveFile(Integer attachFile, List<ByteArrayResource> images) throws Exception {
+        int index = 1;
+        for (ByteArrayResource image : images) {
+            this.saveFile(attachFile, image, FILE_DIRECTORY, index++);
         }
     }
 
@@ -94,58 +108,6 @@ public class PreviewService {
             return PreviewType.PDF;
         } else {
             return PreviewType.NONE;
-        }
-    }
-
-    private ByteArrayResource convertPdfToImage(ByteArrayResource pdfResource) throws Exception {
-        List<ByteArrayResource> pdfImages = DocumentUtil.convertPdfToImageResources(pdfResource);
-        return DocumentUtil.mergeImagesVertically(pdfImages);
-    }
-
-    private void createPdfToImage(Integer attachFile, ByteArrayResource pdfResource) throws Exception {
-        List<ByteArrayResource> pdfImages = DocumentUtil.convertPdfToImageResources(pdfResource);
-        int index = 1;
-        for (ByteArrayResource pdfImage : pdfImages) {
-            this.saveFile(attachFile, pdfImage, FILE_DIRECTORY, index++);
-        }
-    }
-
-    private ByteArrayResource convertDocxToImage(ByteArrayResource docxResource) throws Exception {
-        List<ByteArrayResource> docxImages = DocumentUtil.convertDocxToImageResources(docxResource);
-        return DocumentUtil.mergeImagesVertically(docxImages);
-    }
-
-    private void createDocxToImage(Integer attachFile, ByteArrayResource docxResource) throws Exception {
-        List<ByteArrayResource> docxImages = DocumentUtil.convertDocxToImageResources(docxResource);
-        int index = 1;
-        for (ByteArrayResource docxImage : docxImages) {
-            this.saveFile(attachFile, docxImage, FILE_DIRECTORY, index++);
-        }
-    }
-
-    private ByteArrayResource convertPptxToImage(ByteArrayResource pptxResource) throws Exception {
-        List<ByteArrayResource> pptxImages = DocumentUtil.convertPptxToImageResources(pptxResource);
-        return DocumentUtil.mergeImagesVertically(pptxImages);
-    }
-
-    private void createPptxToImage(Integer attachFile, ByteArrayResource pptxResource) throws Exception {
-        List<ByteArrayResource> pptxImages = DocumentUtil.convertPptxToImageResources(pptxResource);
-        int index = 1;
-        for (ByteArrayResource pptxImage : pptxImages) {
-            this.saveFile(attachFile, pptxImage, FILE_DIRECTORY, index++);
-        }
-    }
-
-    private ByteArrayResource convertXlsxToImage(ByteArrayResource xlsxResource) throws Exception {
-        List<ByteArrayResource> xlsxImages = DocumentUtil.convertXlsxToImageResources(xlsxResource);
-        return DocumentUtil.mergeImagesVertically(xlsxImages);
-    }
-
-    private void createXlsxToImage(Integer attachFile, ByteArrayResource xlsxResource) throws Exception {
-        List<ByteArrayResource> xlsxImages = DocumentUtil.convertXlsxToImageResources(xlsxResource);
-        int index = 1;
-        for (ByteArrayResource xlsxImage : xlsxImages) {
-            this.saveFile(attachFile, xlsxImage, FILE_DIRECTORY, index++);
         }
     }
 }
